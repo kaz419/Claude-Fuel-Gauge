@@ -36,18 +36,31 @@ Color-coded indicators tell you when to pace yourself:
 brew install --cask swiftbar
 ```
 
-On first launch, SwiftBar will ask you to choose a plugins directory. Select or create:
+On first launch, SwiftBar will ask you to set a plugins directory. Click **OK** and select (or create) a folder:
 ```
 ~/Library/Application Support/SwiftBar/Plugins
 ```
 
+> **Tip:** Press `Cmd+Shift+.` in the file picker to show hidden folders, then navigate to: *your home folder* > `Library` > `Application Support` > `SwiftBar` > `Plugins`
+
 ### 2. Install the plugin
 
 ```bash
-curl -o "$(defaults read com.ameba.SwiftBar PluginDirectory)/claude-usage.5m.py" \
+# Create the plugins directory (if it doesn't exist)
+mkdir -p ~/Library/Application\ Support/SwiftBar/Plugins
+
+# Download the plugin
+curl -o ~/Library/Application\ Support/SwiftBar/Plugins/claude-usage.5m.py \
   https://raw.githubusercontent.com/kaz419/Claude-Fuel-Gauge/main/claude-usage.5m.py
-chmod +x "$(defaults read com.ameba.SwiftBar PluginDirectory)/claude-usage.5m.py"
+chmod +x ~/Library/Application\ Support/SwiftBar/Plugins/claude-usage.5m.py
 ```
+
+> If SwiftBar is already configured with a custom plugins directory, replace the path above with your directory, or use:
+> ```bash
+> curl -o "$(defaults read com.ameba.SwiftBar PluginDirectory)/claude-usage.5m.py" \
+>   https://raw.githubusercontent.com/kaz419/Claude-Fuel-Gauge/main/claude-usage.5m.py
+> chmod +x "$(defaults read com.ameba.SwiftBar PluginDirectory)/claude-usage.5m.py"
+> ```
 
 ### 3. Enable Chrome JavaScript automation
 
