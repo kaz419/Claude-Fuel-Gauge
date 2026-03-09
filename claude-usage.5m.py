@@ -156,7 +156,7 @@ def make_bar(pct, width=10):
     return "▓" * filled + "░" * empty
 
 
-def render_output(data, from_cache=False):
+def render_output(data, from_cache=False, error_msg=None):
     """Render SwiftBar output."""
     five_hour = data.get("five_hour") or {}
     seven_day = data.get("seven_day") or {}
@@ -222,6 +222,14 @@ def render_output(data, from_cache=False):
         cache_label = format_reset_time_ago(cached_at)
         marker = " (キャッシュ)" if from_cache else ""
         print(f"⏱ 更新: {cache_label}{marker} | size=11 refresh=true")
+    if from_cache and error_msg:
+        reasons = {
+            "no_claude_tab": "⚠ claude.aiタブを開くと更新されます",
+            "chrome_not_running": "⚠ Chromeが起動していません",
+            "timeout": "⚠ 取得タイムアウト",
+        }
+        reason = reasons.get(error_msg, f"⚠ {error_msg[:40]}")
+        print(f"{reason} | size=11 href=https://claude.ai")
     print("---")
 
     # Refresh & link
@@ -255,7 +263,7 @@ def format_reset_time_ago(iso_str):
 def render_error(msg, cache_data=None):
     """Render error state, falling back to cache if available."""
     if cache_data and "five_hour" in cache_data:
-        render_output(cache_data, from_cache=True)
+        render_output(cache_data, from_cache=True, error_msg=msg)
         return
 
     print("C:-- | size=12 color=#333333")
