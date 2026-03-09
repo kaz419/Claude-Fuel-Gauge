@@ -228,6 +228,8 @@ def render_output(data, from_cache=False):
     print("🔄 今すぐ更新 | refresh=true")
     print("---")
     print("📊 claude.ai/settings/usage を開く | href=https://claude.ai/settings/usage")
+    print("---")
+    print("⏻ 終了 (watchdogも停止) | bash=/bin/sh param1=-c param2=launchctl\\ unload\\ ~/Library/LaunchAgents/com.swiftbar.watchdog.plist\\ 2>/dev/null\\;\\ killall\\ SwiftBar terminal=false")
 
 
 def format_reset_time_ago(iso_str):
@@ -276,6 +278,8 @@ def render_error(msg, cache_data=None):
     print("🔄 今すぐ更新 | refresh=true")
     print("---")
     print("claude.ai/settings/usage を開く | href=https://claude.ai/settings/usage")
+    print("---")
+    print("⏻ 終了 (watchdogも停止) | bash=/bin/sh param1=-c param2=launchctl\\ unload\\ ~/Library/LaunchAgents/com.swiftbar.watchdog.plist\\ 2>/dev/null\\;\\ killall\\ SwiftBar terminal=false")
 
 
 def main():
