@@ -40,8 +40,7 @@ def is_chrome_running():
 
 
 def fetch_usage_via_chrome(org_id):
-    """Fetch usage data via synchronous XMLHttpRequest in a Claude.ai Chrome tab.
-    If no claude.ai tab exists, silently create one in background.
+    """Fetch usage data via synchronous XMLHttpRequest in an existing Claude.ai Chrome tab.
     Requires: Chrome > View > Developer > Allow JavaScript from Apple Events
     """
     if not is_chrome_running():
@@ -49,10 +48,8 @@ def fetch_usage_via_chrome(org_id):
 
     api_path = f"/api/organizations/{org_id}/usage"
 
-    # Try existing tabs first, then create a background tab if needed
     applescript = f'''
         tell application "Google Chrome"
-            -- First, search existing tabs
             set windowList to every window
             repeat with w in windowList
                 set tabList to every tab of w
@@ -63,26 +60,14 @@ def fetch_usage_via_chrome(org_id):
                     end if
                 end repeat
             end repeat
-
-            -- No claude.ai tab found: create one in the last window (background)
-            if (count of windowList) > 0 then
-                tell last window
-                    set newTab to make new tab with properties {{URL:"https://claude.ai"}}
-                end tell
-                -- Wait for page to load
-                delay 3
-                set result to execute newTab javascript "var xhr = new XMLHttpRequest(); xhr.open('GET', '{api_path}', false); xhr.send(); xhr.responseText"
-                return result
-            end if
-
-            return "{{\\"error\\": \\"no_chrome_window\\"}}"
+            return "{{\\"error\\": \\"no_claude_tab\\"}}"
         end tell
     '''
 
     try:
         result = subprocess.run(
             ["osascript", "-e", applescript],
-            capture_output=True, text=True, timeout=20
+            capture_output=True, text=True, timeout=10
         )
         if result.returncode != 0:
             stderr = result.stderr.strip()
